@@ -6,7 +6,7 @@ You can either run the test using its main method and then you pass in the JDBC
 URL directly, or if you are running the test using JUnit integration you will 
 have to pass the JDBC URL using the -Durl=xxx syntax.
 
-Note only user-assigned managed identity can be support at this time because
+Note only user-assigned managed identity can be supported at this time because
 the JDBC driver does not have a username callback.
 
 ## What does the JDBC URL look like?
