@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * A test that can be used to verify that managed identity is working with your
- * MySQL JDBC connection.
+ * PostgreSQL JDBC connection.
  */
 public class JDBCTest {
 
@@ -15,9 +15,6 @@ public class JDBCTest {
      */
     @Test
     public void testConnection() {
-        /*
-         * &user=manriem@microsoft.onmicrosoft.com@postgres-msi
-         */
         main(new String[]{System.getProperty("url")});
     }
 

@@ -42,10 +42,6 @@ public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlu
      */
     public AzurePostgresqlMSIAuthenticationPlugin(Properties properties) {
         this.properties = properties;
-        
-        if (!properties.containsKey("user")) {
-            properties.setProperty("user", new ManagedIdentityCredentialBuilder().build().getClientId());
-        }
     }
 
     /**
