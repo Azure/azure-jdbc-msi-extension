@@ -26,7 +26,7 @@ Note `hostname-only` is the first part of the FQDN hostname.
 
 ### Required fixed properties
 
-* `sslmode` needs to be set to REQUIRED.
+* `sslmode` needs to be set to `require`.
 * `authenticationPluginClassName` needs to be set to `com.azure.postgresql.auth.plugin.AzurePostgresqlMSIAuthenticationPlugin`
 
 ## Background information
