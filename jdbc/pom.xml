@@ -5,20 +5,25 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.azure.jdbc</groupId>
-    <artifactId>azure-jdbc-msi-extension</artifactId>
+    <artifactId>azure-jdbc-msi-extension-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>azure-jdbc-postgresql-msi-extension</artifactId>
+  <artifactId>azure-jdbc-msi-extension</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>azure-jdbc-postgresql-msi-extension</name>
+  <name>Azure JDBC MSI Extension</name>
 
   <dependencies>
     <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

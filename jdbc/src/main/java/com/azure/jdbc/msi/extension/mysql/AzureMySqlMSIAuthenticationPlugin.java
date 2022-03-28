@@ -1,4 +1,4 @@
-package com.azure.mysql.auth.plugin;
+package com.azure.jdbc.msi.extension.mysql;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenCredential;

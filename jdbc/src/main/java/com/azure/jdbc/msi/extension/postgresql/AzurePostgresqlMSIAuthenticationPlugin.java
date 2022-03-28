@@ -1,4 +1,4 @@
-package com.azure.postgresql.auth.plugin;
+package com.azure.jdbc.msi.extension.postgresql;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenCredential;
