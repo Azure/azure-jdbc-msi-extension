@@ -3,12 +3,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.azure</groupId>
-  <artifactId>azure-jdbc-auth-plugin</artifactId>
+  <groupId>com.azure.jdbc</groupId>
+  <artifactId>azure-jdbc-msi-extension</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Azure JDBC Auth plugin</name>
-  <description>This project provides JDBC plugins for databases to authentication with MSI</description>
+  <name>Azure JDBC MSI Extension</name>
+  <description>This project provides JDBC extension for databases to authentication with MSI</description>
   <modules>
     <module>mysql</module>
     <module>postgresql</module>

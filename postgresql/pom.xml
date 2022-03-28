@@ -4,21 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.azure</groupId>
-    <artifactId>azure-jdbc-auth-plugin</artifactId>
+    <groupId>com.azure.jdbc</groupId>
+    <artifactId>azure-jdbc-msi-extension</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>azure-jdbc-postgresql-auth-plugin</artifactId>
+  <artifactId>azure-jdbc-postgresql-msi-extension</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>azure-jdbc-postgresql-auth-plugin</name>
+  <name>azure-jdbc-postgresql-msi-extension</name>
 
   <dependencies>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <scope>compile</scope>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>
