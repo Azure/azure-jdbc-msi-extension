@@ -19,7 +19,7 @@ public class SampleController {
         String result = "not executed";
         Connection connection;
         try {            
-            String connectionString = databaseConnectionString + "?user=" + username;
+            String connectionString = databaseConnectionString + "&user=" + username;
             connection = DriverManager.getConnection(connectionString);
 
             if (connection != null) {
