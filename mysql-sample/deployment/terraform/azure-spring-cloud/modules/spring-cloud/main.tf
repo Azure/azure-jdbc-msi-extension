@@ -52,8 +52,7 @@ resource "azurerm_spring_cloud_java_deployment" "application_deployment" {
 
   environment_variables = {
     "SPRING_PROFILES_ACTIVE" = "prod,azure"
-
-    "MYSQL_DATABASE" = "jdbc:mysql://${var.database_url}?useUnicode=true&characterEncoding=utf8&useSSL=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    "MYSQL_DATABASE" = "jdbc:mysql://${var.database_url}?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin"
     "MYSQL_USERNAME" = local.mysql_application_username
   }
 }

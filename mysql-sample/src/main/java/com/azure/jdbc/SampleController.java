@@ -3,18 +3,23 @@ package com.azure.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SampleController {
 
+    @Value("${mysql.database}")
+    private String databaseConnectionString;
+    @Value("${mysql.username}")
+    private String username;
     @GetMapping("/")
     public String getServerDate(){
         String result = "not executed";
         Connection connection;
         try {            
-            String connectionString = "jdbc:mysql://mysql-msi-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&user=sqladmin@mysql-msi-jdbc-dev";
+            String connectionString = databaseConnectionString + "?user=" + username;
             connection = DriverManager.getConnection(connectionString);
 
             if (connection != null) {
