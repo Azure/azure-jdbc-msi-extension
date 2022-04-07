@@ -2,6 +2,7 @@ package com.azure.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenRequestContext;
@@ -29,7 +30,10 @@ public class SampleController {
             connection = DriverManager.getConnection(connectionString);
 
             if (connection != null) {
-                result = connection.prepareStatement("SELECT now() as now").executeQuery().getString("now");
+                ResultSet queryResult = connection.prepareStatement("SELECT now() as now").executeQuery();
+                if (queryResult.next()) {
+                    result = queryResult.getString("now");
+                }
                 connection.close();
             } else {
                 result = "Failed to connect.";
