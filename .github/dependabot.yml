@@ -9,3 +9,8 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+      # Specify labels for npm pull requests
+    labels:
+      - "azure-spring"
+      - "Client"
+      - "dependencies"
