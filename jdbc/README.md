@@ -4,6 +4,8 @@
 
 You can either run the test using its main method and then you pass in the JDBC URL directly, or if you are running the test using JUnit integration you will have to pass the JDBC URL using the -Durl=xxx syntax.
 
+Before connecting to Azure Database for MySQL, make sure you have [assigned the required privileges of the specific database](https://dev.mysql.com/doc/refman/8.0/en/grant.html#grant-database-privileges) to [the MySQL user for your managed identity](https://docs.microsoft.com/azure/mysql/howto-connect-with-managed-identity#creating-a-mysql-user-for-your-managed-identity).
+
 ## What does the JDBC URL look like?
 
 ```
@@ -27,7 +29,7 @@ Note `hostname-only` is the first part of the FQDN hostname.
 
 ## Background information
 
-* https://docs.microsoft.com/en-us/azure/mysql/howto-connect-with-managed-identity 
+* https://docs.microsoft.com/azure/mysql/howto-connect-with-managed-identity 
 * https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-authentication.html
 * https://techcommunity.microsoft.com/t5/azure-database-for-mysql-blog/how-to-connect-to-azure-database-for-mysql-using-managed/ba-p/1518196#:~:text=%20How%20to%20connect%20to%20Azure%20Database%20for,the%20Managed%20Identity%20GUID%20and%20then...%20More%20
 
@@ -41,6 +43,8 @@ Note `hostname-only` is the first part of the FQDN hostname.
 You can either run the test using its main method and then you pass in the JDBC
 URL directly, or if you are running the test using JUnit integration you will
 have to pass the JDBC URL using the -Durl=xxx syntax.
+
+Before connecting to Azure Database for PostgreSQL, make sure you have [assigned the required privileges of the specific database](https://www.postgresql.org/docs/current/sql-grant.html) to [the PostgreSQL user for your managed identity](https://docs.microsoft.com/azure/postgresql/howto-connect-with-managed-identity#creating-a-postgresql-user-for-your-managed-identity).
 
 Note only user-assigned managed identity can be supported at this time because
 the JDBC driver does not have a username callback.
@@ -67,6 +71,6 @@ Note `hostname-only` is the first part of the FQDN hostname.
 
 ## Background information
 
-* https://docs.microsoft.com/en-us/azure/postgresql/howto-connect-with-managed-identity
+* https://docs.microsoft.com/azure/postgresql/howto-connect-with-managed-identity
 * https://github.com/spaceteams/postgres-rds-authentication-plugin
 * https://github.com/pgjdbc/pgjdbc/blob/master/pgjdbc/src/main/java/org/postgresql/plugin/AuthenticationPlugin.java
