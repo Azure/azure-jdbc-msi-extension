@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.0.1"
+      version = "3.0.2"
     }
     azurecaf = {
       source  = "aztfmod/azurecaf"
@@ -34,18 +34,18 @@ resource "azurerm_resource_group" "main" {
     "terraform"        = "true"
     "environment"      = local.environment
     "application-name" = var.application_name
-    "nubesgen-version" = "0.11.1"
+    "nubesgen-version" = "0.11.2"
   }
 }
 
 module "application" {
-  source           = "../modules/spring-cloud"
+  source           = "../modules/app-service"
   resource_group   = azurerm_resource_group.main.name
   application_name = var.application_name
   environment      = local.environment
   location         = var.location
 
-  database_url       = module.database.database_url
+  database_url      = module.database.database_url
   database_host_name = module.database.database_host_name
 }
 
