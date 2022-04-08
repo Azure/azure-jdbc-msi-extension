@@ -80,3 +80,27 @@ resource "azurerm_postgresql_active_directory_administrator" "current_aad_user_a
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
 }
+
+# this rule is to enable the access from current machine to allow SQL script executions
+# this sample provides sql script to create aad users in MySQL. If you don't plan to create those users you can skip these steps
+data "http" "myip" {
+  url = "http://whatismyip.akamai.com"
+}
+
+locals {
+  myip = chomp(data.http.myip.body)
+}
+
+resource "azurecaf_name" "postgresql_firewall_rule_agent" {
+  name          = "${var.application_name}-deployagent"
+  resource_type = "azurerm_mysql_firewall_rule"
+  suffixes      = [var.environment]
+}
+
+resource "azurerm_postgresql_firewall_rule" "postgresql_firewall_clientip" {
+  name                = azurecaf_name.postgresql_firewall_rule_agent.result
+  resource_group_name = var.resource_group
+  server_name         = azurerm_postgresql_server.database.name
+  start_ip_address    = local.myip
+  end_ip_address      = local.myip
+}
