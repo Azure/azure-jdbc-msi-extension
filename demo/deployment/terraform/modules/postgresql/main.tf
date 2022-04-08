@@ -30,7 +30,7 @@ resource "azurerm_postgresql_server" "database" {
   sku_name                     = "B_Gen5_1"
   storage_mb                   = 5120
   backup_retention_days        = 7
-  version                      = "10"
+  version                      = "11"
   geo_redundant_backup_enabled = false
 
   ssl_enforcement_enabled = true
@@ -51,8 +51,8 @@ resource "azurerm_postgresql_database" "database" {
   name                = azurecaf_name.postgresql_database.result
   resource_group_name = var.resource_group
   server_name         = azurerm_postgresql_server.database.name
-  charset             = "utf8"
-  collation           = "en_US.utf8"
+  charset             = "UTF8"
+  collation           = "en-US"
 }
 
 resource "azurecaf_name" "postgresql_firewall_rule" {
@@ -76,7 +76,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_postgresql_active_directory_administrator" "current_aad_user_admin" {
   server_name         = azurerm_postgresql_server.database.name
   resource_group_name = var.resource_group
-  login               = "sqladmin"
+  login               = var.aad_administrator_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
 }

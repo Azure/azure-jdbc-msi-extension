@@ -19,11 +19,6 @@ variable "location" {
   description = "The Azure region where all resources in this example should be created"
 }
 
-variable "database_host_name" {
-  type        = string
-  description = "The host name of the MySQL server"  
-}
-
 variable "database_url" {
   type        = string
   description = "The URL to the database"

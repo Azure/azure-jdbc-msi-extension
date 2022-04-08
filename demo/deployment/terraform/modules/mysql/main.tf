@@ -103,5 +103,5 @@ resource "azurerm_mysql_firewall_rule" "mysql_firewall_clientip" {
 # prepare locals to be returned as module output
 locals {
   database_url      = "${azurerm_mysql_server.database.name}.mysql.database.azure.com:3306/${azurerm_mysql_database.database.name}"
-  jdbc_database_url = "jdbc:mysql://${local.database_url}?useSSL=true"
+  
 }

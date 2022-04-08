@@ -28,14 +28,9 @@ resource "azurerm_spring_cloud_app" "application" {
   }
 }
 
-# important: mysql aad authentication expect the application_id, not the object id. that is the reason to look for the application_id in aad
+# important: mysql and postgresql aad authentication expect the application_id, not the object id. that is the reason to look for the application_id in aad
 data "azuread_service_principal" "aad_appid" {
   object_id = azurerm_spring_cloud_app.application.identity[0].principal_id
-}
-
-# this user will be created in the mysql server to use AAD login
-locals {
-  mysql_application_username = "${local.spring_cloud_app_name}@${var.database_host_name}"
 }
 
 # This creates the application deployment. Terraform provider doesn't support dotnet yet
@@ -51,8 +46,6 @@ resource "azurerm_spring_cloud_java_deployment" "application_deployment" {
   }
 
   environment_variables = {
-    "SPRING_PROFILES_ACTIVE" = "prod,azure"
-    "MYSQL_DATABASE" = "jdbc:mysql://${var.database_url}?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin"
-    "MYSQL_USERNAME" = local.mysql_application_username
+    "DATABASE_CONNECTION_URL" = var.database_url
   }
 }

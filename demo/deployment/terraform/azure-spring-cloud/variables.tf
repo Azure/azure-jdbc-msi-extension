@@ -24,3 +24,9 @@ variable "database_type" {
     error_message = "Database must be either postgresql or mysql."
   }
 }
+
+variable "aad_administrator_name" {
+  type        = string
+  description = "The Azure Active Directory administrator name"
+  default = "" 
+}
