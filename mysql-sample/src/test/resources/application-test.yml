@@ -1,5 +1,5 @@
 mysql:
-    database: jdbc:mysql://mysql-msi-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin,com.mysql.cj.protocol.a.authentication.MysqlClearPasswordPlugin
+    database: jdbc:mysql://mysql-msi-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin
     username: sqladmin@mysql-msi-jdbc-dev
 
 postgresql:

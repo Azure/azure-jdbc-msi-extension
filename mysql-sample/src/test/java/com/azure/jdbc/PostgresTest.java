@@ -1,9 +1,13 @@
 package com.azure.jdbc;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -12,9 +16,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class PostgresTest {
 
-    @Value("${mysql.database}")
+    @Value("${postgres.database}")
 	private String databaseConnectionString;
-	@Value("${mysql.username}")
+	@Value("${postgres.username}")
 	private String username;
 
     /*
