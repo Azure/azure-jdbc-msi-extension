@@ -8,11 +8,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.azure.core.credential.AccessToken;
-import com.azure.core.credential.TokenRequestContext;
-import com.azure.identity.DefaultAzureCredential;
-import com.azure.identity.DefaultAzureCredentialBuilder;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,10 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class AppTest {
-	@Value("${mysql.database}")
+public class MySqlTest {
+	@Value("${postgresql.database}")
 	private String databaseConnectionString;
-	@Value("${mysql.username}")
+	@Value("${postgresql.username}")
 	private String username;
 
 	@Test
@@ -63,7 +58,7 @@ public class AppTest {
 	void getServerTimeExplicitPassword() throws SQLException {
 		Connection connection;
 
-		connection = DriverManager.getConnection(databaseConnectionString, username, getAccessToken());
+		connection = DriverManager.getConnection(databaseConnectionString, username, new AccessTokenHelper().getAccessToken());
 
 		if (connection != null) {
 			try {
@@ -80,13 +75,5 @@ public class AppTest {
 		}
 	}
 
-	public String getAccessToken() {
-        DefaultAzureCredential azureCredential = new DefaultAzureCredentialBuilder().build();
-
-        TokenRequestContext tokenRequest = new TokenRequestContext()
-                .addScopes("https://ossrdbms-aad.database.windows.net");
-        AccessToken accessToken = azureCredential.getToken(tokenRequest).block();
-		String token= accessToken.getToken();
-		return token;
-    }
+	
 }

@@ -1,3 +1,7 @@
 mysql:
     database: jdbc:mysql://mysql-msi-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin,com.mysql.cj.protocol.a.authentication.MysqlClearPasswordPlugin
     username: sqladmin@mysql-msi-jdbc-dev
+
+postgresql:
+    database: jdbc:postgresql://postgresql-msi-jdbc-dev.postgres.database.azure.com:5432/Db?sslmode=require&sslrootcert=C:\Users\james\Downloads\postgresql-jdbc-9.4.1209.jre7.jar
+    username: sqladmin@postgresql-msi-jdbc-dev
