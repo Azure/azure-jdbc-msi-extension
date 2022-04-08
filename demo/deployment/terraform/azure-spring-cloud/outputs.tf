@@ -26,12 +26,12 @@ output "application_identity" {
 }
 
 output "database_host" {
-  value       = module.database.database_host
+  value       = local.database_host
   description = "MySQL Server host FQDN"
 }
 
 output "admin_username" {
-  value       = module.database.admin_username
+  value       = local.admin_username
   description = "The MySQL server user name."
 }
 

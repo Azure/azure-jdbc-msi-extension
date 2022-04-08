@@ -1,17 +1,29 @@
+variable "resource_group" {
+  type        = string
+  description = "The resource group"
+  default     = ""
+}
+
 variable "application_name" {
   type        = string
   description = "The name of your application"
-  default     = "msi-jdbc"
+  default     = ""
 }
 
 variable "environment" {
   type        = string
   description = "The environment (dev, test, prod...)"
-  default     = ""
+  default     = "dev"
 }
 
 variable "location" {
   type        = string
   description = "The Azure region where all resources in this example should be created"
-  default     = "eastus"
+  default     = ""
+}
+
+variable "administrator_login" {
+  type        = string
+  description = "The PostgreSQL administrator login"
+  default     = "postgresqladmin"
 }
