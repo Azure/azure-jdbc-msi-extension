@@ -48,7 +48,7 @@ the JDBC driver does not have a username callback.
 ## What does the JDBC URL look like?
 
 ```
-jdbc:postgresql://hostname:portNumber/databaseName?sslmode=require&authenticationPluginClassName=com.azure.jdbc.msi.extension.postgresql.AzurePostgresMSIAuthenticationPlugin&user=username
+jdbc:postgresql://hostname:portNumber/databaseName?sslmode=require&authenticationPluginClassName=com.azure.jdbc.msi.extension.postgresql.AzurePostgresqlMSIAuthenticationPlugin&user=username
 ```
 
 ### Required modifiable properties
