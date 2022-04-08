@@ -11,7 +11,7 @@
   <description>This project provides JDBC extension for databases to authentication with MSI</description>
   <modules>
     <module>jdbc</module>
-    <module>mysql-sample</module>
+    <module>demo</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

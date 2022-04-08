@@ -14,7 +14,7 @@
     <!--  lookup parent from repository  -->
   </parent>
   <groupId>com.azure.jdbc</groupId>
-  <artifactId>azure-jdbc-msi-mysql-sample</artifactId>
+  <artifactId>azure-jdbc-msi-demo-sample</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>MySQL sample for Azure JDBC MSI Extension</name>
 
@@ -28,6 +28,11 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.28</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.3.3</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

@@ -16,18 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SampleController {
 
-    @Value("${mysql.database}")
+    @Value("${database.connection.url}")
     private String databaseConnectionString;
-    @Value("${mysql.username}")
-    private String username;
 
     @GetMapping("/")
     public String getServerDate() {
         String result = "not executed";
         Connection connection;
         try {
-            String connectionString = databaseConnectionString + "&user=" + username;
-            connection = DriverManager.getConnection(connectionString);
+            connection = DriverManager.getConnection(databaseConnectionString);
 
             if (connection != null) {
                 ResultSet queryResult = connection.prepareStatement("SELECT now() as now").executeQuery();
