@@ -66,7 +66,7 @@ resource "azurerm_linux_web_app" "application" {
   }
 
   identity {
-    type         = var.identity_type
+    type         = var.identity_type == "UserAssigned" ? "SystemAssigned, UserAssigned" : var.identity_type
     identity_ids = azurerm_user_assigned_identity.app_user_assigned_identity.*.id
   }
 

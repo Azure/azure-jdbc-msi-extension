@@ -46,6 +46,7 @@ function print_usage() {
     echo "<aad admin username>  -> your Azure AD postgresql admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com. Only for postgresql"
 }
 
+echo "args count: $#"
 if (($# < 6)); then
     print_usage $0
 else
@@ -54,14 +55,7 @@ else
     location=$3
     name=$4
     identity_type=$5
-    if [ "$database" == "postgresql" ]; then
-        if [ $# -lt 6 ]; then
-            print_usage $0
-            echo "postgresql requires aad admin username"
-        else
-            aad_administrator_name=$6
-        fi
-    fi
+    aad_administrator_name=$6
 
     cd terraform
     echo "Deploying infrastructure"

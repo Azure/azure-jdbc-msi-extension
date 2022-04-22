@@ -71,7 +71,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_mysql_active_directory_administrator" "current_aad_user_admin" {
   server_name         = azurerm_mysql_server.database.name
   resource_group_name = var.resource_group
-  login               = "sqladmin"
+  login               = var.aad_administrator_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
 }

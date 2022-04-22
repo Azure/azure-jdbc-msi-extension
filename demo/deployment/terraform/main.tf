@@ -59,12 +59,13 @@ module "application_appservice" {
   database_url     = local.jdbc_database_url_with_user
 }
 module "database_mysql" {
-  count            = var.database_type == "mysql" ? 1 : 0
-  source           = "./modules/mysql"
-  resource_group   = azurerm_resource_group.main.name
-  application_name = var.application_name
-  environment      = local.environment
-  location         = var.location
+  count                  = var.database_type == "mysql" ? 1 : 0
+  source                 = "./modules/mysql"
+  resource_group         = azurerm_resource_group.main.name
+  application_name       = var.application_name
+  environment            = local.environment
+  location               = var.location
+  aad_administrator_name = var.aad_administrator_name
 }
 
 module "database_postgresql" {

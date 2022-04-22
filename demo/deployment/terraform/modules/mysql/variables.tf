@@ -33,3 +33,8 @@ variable "database_name" {
   description = "The MySQL database name"
   default     = "db"
 }
+
+variable "aad_administrator_name" {
+  type        = string
+  description = "The Azure Active Directory administrator name"
+}
