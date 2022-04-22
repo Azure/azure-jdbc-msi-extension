@@ -40,7 +40,7 @@ resource "azurerm_resource_group" "main" {
 
 module "application_spring" {
   count            = var.hosting_type == "spring" ? 1 : 0
-  source           = "../modules/spring-cloud"
+  source           = "./modules/spring-cloud"
   resource_group   = azurerm_resource_group.main.name
   application_name = var.application_name
   environment      = local.environment
@@ -50,7 +50,7 @@ module "application_spring" {
 
 module "application_appservice" {
   count            = var.hosting_type == "appservice" ? 1 : 0
-  source           = "../modules/app-service"
+  source           = "./modules/app-service"
   resource_group   = azurerm_resource_group.main.name
   application_name = var.application_name
   environment      = local.environment
@@ -60,7 +60,7 @@ module "application_appservice" {
 }
 module "database_mysql" {
   count            = var.database_type == "mysql" ? 1 : 0
-  source           = "../modules/mysql"
+  source           = "./modules/mysql"
   resource_group   = azurerm_resource_group.main.name
   application_name = var.application_name
   environment      = local.environment
@@ -69,7 +69,7 @@ module "database_mysql" {
 
 module "database_postgresql" {
   count                  = var.database_type == "postgresql" ? 1 : 0
-  source                 = "../modules/postgresql"
+  source                 = "./modules/postgresql"
   resource_group         = azurerm_resource_group.main.name
   application_name       = var.application_name
   environment            = local.environment
