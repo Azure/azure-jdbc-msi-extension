@@ -14,6 +14,9 @@ import java.util.Properties;
 import org.postgresql.plugin.AuthenticationPlugin;
 import org.postgresql.plugin.AuthenticationRequestType;
 import org.postgresql.util.PSQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.postgresql.util.PSQLState.INVALID_PASSWORD;
 
 /**
@@ -21,7 +24,8 @@ import static org.postgresql.util.PSQLState.INVALID_PASSWORD;
  */
 public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlugin {
 
-    DefaultAzureCredential azureCredential = new DefaultAzureCredentialBuilder().build();
+    DefaultAzureCredential azureCredential;
+    Logger logger = LoggerFactory.getLogger(AzurePostgresqlMSIAuthenticationPlugin.class);
     /**
      * Stores the access token.
      */
@@ -47,12 +51,25 @@ public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlu
         this.properties = properties;
     }
 
+    private DefaultAzureCredential getAzureCredential() {
+        if (azureCredential == null) {
+            DefaultAzureCredentialBuilder builder = new DefaultAzureCredentialBuilder();
+            if (properties != null && properties.containsKey("clientid")) {
+                String clientId = properties.getProperty("clientid");
+                logger.info("using clientid: " + clientId);                
+                builder.managedIdentityClientId(clientId);
+            }
+            azureCredential = builder.build();
+        }
+        return azureCredential;
+    }
+
     /**
      * Get the password.
      * 
      * @param art the authentication request type.
      * @return the password.
-     * @throws PSQLException when an error occurs. 
+     * @throws PSQLException when an error occurs.
      */
     @Override
     public char[] getPassword(AuthenticationRequestType art) throws PSQLException {
@@ -72,6 +89,6 @@ public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlu
     private AccessToken getAccessToken() {
         TokenRequestContext tokenRequest = new TokenRequestContext()
                 .addScopes("https://ossrdbms-aad.database.windows.net");
-        return azureCredential.getToken(tokenRequest).block();
+        return getAzureCredential().getToken(tokenRequest).block();
     }
 }

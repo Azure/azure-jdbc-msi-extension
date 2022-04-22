@@ -16,9 +16,9 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 public class MySqlTest {
-	@Value("${mysql.database}")
+	@Value("${mysql.connection.url}")
 	private String databaseConnectionString;
-	@Value("${mysql.username}")
+	@Value("${mysql.connection.username}")
 	private String username;
 
 	@Test

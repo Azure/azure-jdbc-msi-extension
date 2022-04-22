@@ -16,9 +16,9 @@ output "application_name" {
 output "mysql_application_username" {
   value       = azurecaf_name.app_service.result
   description = "The application user name."
-  
+
 }
 # important: mysql aad authentication expect the application_id, not the object id. that is the reason to look for the application_id in aad
 output "application_identity" {
-  value = data.azuread_service_principal.aad_appid.application_id
+  value = var.identity_type == "SystemAssigned" ? data.azuread_service_principal.aad_appid.0.application_id : azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id
 }

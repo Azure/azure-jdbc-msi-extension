@@ -19,13 +19,31 @@ resource "azurerm_service_plan" "application" {
   resource_group_name = var.resource_group
   location            = var.location
 
-  sku_name = "F1"
+  sku_name = "B1"
   os_type  = "Linux"
 
   tags = {
     "environment"      = var.environment
     "application-name" = var.application_name
   }
+}
+
+resource "azurecaf_name" "app_service_identity" {
+  name          = var.application_name
+  resource_type = "azurerm_user_assigned_identity"
+  suffixes      = [var.environment]
+}
+
+resource "azurerm_user_assigned_identity" "app_user_assigned_identity" {
+  count               = var.identity_type == "UserAssigned" ? 1 : 0
+  resource_group_name = var.resource_group
+  location            = var.location
+  name                = azurecaf_name.app_service_identity.result
+}
+
+
+locals {
+  database_connection_url = var.identity_type == "UserAssigned" ? "${var.database_url}&clientid=${azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id}" : var.database_url
 }
 
 resource "azurecaf_name" "app_service" {
@@ -48,7 +66,8 @@ resource "azurerm_linux_web_app" "application" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type         = var.identity_type
+    identity_ids = azurerm_user_assigned_identity.app_user_assigned_identity.*.id
   }
 
   site_config {
@@ -65,19 +84,12 @@ resource "azurerm_linux_web_app" "application" {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
 
     # These are app specific environment variables
-    "SPRING_PROFILES_ACTIVE" = "prod,azure"
-
-    "MYSQL_DATABASE" = "jdbc:mysql://${var.database_url}?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin"
-    "MYSQL_USERNAME" = local.mysql_application_username
+    "DATABASE_CONNECTION_URL" = local.database_connection_url
   }
 }
 
 # important: mysql aad authentication expect the application_id, not the object id. that is the reason to look for the application_id in aad
 data "azuread_service_principal" "aad_appid" {
+  count = var.identity_type == "SystemAssigned" ? 1 : 0
   object_id = azurerm_linux_web_app.application.identity[0].principal_id
-}
-
-# this user will be created in the mysql server to use AAD login
-locals {
-  mysql_application_username = "${azurecaf_name.app_service.result}@${var.database_host_name}"
 }

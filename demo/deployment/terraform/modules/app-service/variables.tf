@@ -19,12 +19,17 @@ variable "location" {
   description = "The Azure region where all resources in this example should be created"
 }
 
-variable "database_host_name" {
-  type        = string
-  description = "The host name of the MySQL server"  
-}
-
 variable "database_url" {
   type        = string
   description = "The URL to the database"
+}
+
+variable "identity_type" {
+  type        = string
+  description = "value of either 'SystemAssigned' or 'UserAssigned' to set the identity of the resource"
+  default     = "SystemAssigned"
+  validation {
+    condition     = var.identity_type == "SystemAssigned" || var.identity_type == "UserAssigned"
+    error_message = "The identity_type must be either SystemAssigned or UserAssigned."
+  }
 }

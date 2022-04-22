@@ -1,3 +1,5 @@
-mysql:
-    database: jdbc:mysql://mysql-msi-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin,com.mysql.cj.protocol.a.authentication.MysqlClearPasswordPlugin
-    username: sqladmin@mysql-msi-jdbc-dev
+database:
+    connection:
+        url: jdbc:mysql://mysql-fmiguel-msi-jdbc-dev.mysql.database.azure.com:3306/db?sslMode=REQUIRED&useSSL=true
+        username: adm@mysql-fmiguel-msi-jdbc-dev
+        # url: jdbc:mysql://mysql-fmiguel-msi-jdbc-dev.mysql.database.azure.com:3306/db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&user=adm@mysql-fmiguel-msi-jdbc-dev&disabledAuthenticationPlugins=mysql_native_password,authentication_kerberos_client,authentication_ldap_sasl_client,authentication_oci_client,sha256_password,mysql_old_password,caching_sha2_password

@@ -12,8 +12,17 @@ public class AccessTokenHelper {
         TokenRequestContext tokenRequest = new TokenRequestContext()
                 .addScopes("https://ossrdbms-aad.database.windows.net");
         AccessToken accessToken = azureCredential.getToken(tokenRequest).block();
-		String token= accessToken.getToken();
-		return token;
+        return accessToken.getToken();
     }
-    
+
+    public String getAccessToken(String clientId) {
+        DefaultAzureCredential azureCredential = new DefaultAzureCredentialBuilder().managedIdentityClientId(clientId)
+                .build();
+
+        TokenRequestContext tokenRequest = new TokenRequestContext()
+                .addScopes("https://ossrdbms-aad.database.windows.net");
+        AccessToken accessToken = azureCredential.getToken(tokenRequest).block();
+        return accessToken.getToken();
+    }
+
 }

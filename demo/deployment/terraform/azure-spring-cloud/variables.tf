@@ -16,6 +16,16 @@ variable "location" {
   default     = "eastus"
 }
 
+variable "hosting_type" {
+  type        = string
+  description = "Hosting type (appservice, spring)"
+  default     = "appservice"
+  validation {
+    condition     = var.hosting_type == "appservice" || var.hosting_type == "spring"
+    error_message = "Hosting type must be either appservice or spring."
+  }
+}
+
 variable "database_type" {
   type        = string
   description = "Database type (postgresql, mysql)"
@@ -28,5 +38,15 @@ variable "database_type" {
 variable "aad_administrator_name" {
   type        = string
   description = "The Azure Active Directory administrator name"
-  default = "" 
+  default     = ""
+}
+
+variable "identity_type" {
+  type        = string
+  description = "value of either 'SystemAssigned' or 'UserAssigned' to set the identity of the resource"
+  default     = "SystemAssigned"
+  validation {
+    condition     = var.identity_type == "SystemAssigned" || var.identity_type == "UserAssigned"
+    error_message = "The identity_type must be either SystemAssigned or UserAssigned."
+  }
 }

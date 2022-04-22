@@ -38,17 +38,26 @@ resource "azurerm_resource_group" "main" {
   }
 }
 
-module "application" {
+module "application_spring" {
+  count            = var.hosting_type == "spring" ? 1 : 0
   source           = "../modules/spring-cloud"
   resource_group   = azurerm_resource_group.main.name
   application_name = var.application_name
   environment      = local.environment
   location         = var.location
-
-  database_url = local.jdbc_database_url_with_user
-  # database_host_name = local.database_host_name
+  database_url     = local.jdbc_database_url_with_user
 }
 
+module "application_appservice" {
+  count            = var.hosting_type == "appservice" ? 1 : 0
+  source           = "../modules/app-service"
+  resource_group   = azurerm_resource_group.main.name
+  application_name = var.application_name
+  environment      = local.environment
+  location         = var.location
+  identity_type    = var.identity_type
+  database_url     = local.jdbc_database_url_with_user
+}
 module "database_mysql" {
   count            = var.database_type == "mysql" ? 1 : 0
   source           = "../modules/mysql"
@@ -70,12 +79,17 @@ module "database_postgresql" {
 
 locals {
   # database_url                = var.database_type == "mysql" ? module.database_mysql[0].database_url : module.database_postgresql[0].database_url
-  database_fqdn               = var.database_type == "mysql" ? module.database_mysql[0].database_fqdn : module.database_postgresql[0].database_fqdn
-  admin_username              = var.database_type == "mysql" ? module.database_mysql[0].admin_username : module.database_postgresql[0].admin_username
+  database_fqdn  = var.database_type == "mysql" ? module.database_mysql[0].database_fqdn : module.database_postgresql[0].database_fqdn
+  admin_username = var.database_type == "mysql" ? module.database_mysql[0].admin_username : module.database_postgresql[0].admin_username
   # database_host               = var.database_type == "mysql" ? module.database_mysql[0].database_host : module.database_postgresql[0].database_host
   database_name               = var.database_type == "mysql" ? module.database_mysql[0].database_name : module.database_postgresql[0].database_name
   database_host_name          = var.database_type == "mysql" ? module.database_mysql[0].database_host_name : module.database_postgresql[0].database_host_name
   application_login           = "${var.application_name}@${local.database_host_name}"
   jdbc_database_url           = var.database_type == "mysql" ? module.database_mysql[0].jdbc_database_url : module.database_postgresql[0].jdbc_database_url
   jdbc_database_url_with_user = "${local.jdbc_database_url}&user=${local.application_login}"
+
+  application_name          = var.hosting_type == "appservice" ? module.application_appservice[0].application_name : module.application_spring[0].application_name
+  application_identity      = var.hosting_type == "appservice" ? module.application_appservice[0].application_identity : module.application_spring[0].application_identity
+  application_url           = var.hosting_type == "appservice" ? module.application_appservice[0].application_url : module.application_spring[0].application_url
+  spring_cloud_service_name = var.hosting_type == "appservice" ? "" : module.application_spring[0].spring_cloud_service_name
 }

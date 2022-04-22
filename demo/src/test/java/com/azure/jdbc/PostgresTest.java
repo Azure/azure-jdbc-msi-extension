@@ -16,10 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class PostgresTest {
 
-    @Value("${postgres.database}")
+    @Value("${postgresql.connection.url}")
 	private String databaseConnectionString;
-	@Value("${postgres.username}")
-	private String username;
 
     /*
 	 * This test will fail if it is not possible to connect to the database.
@@ -30,9 +28,7 @@ public class PostgresTest {
 	void getServerTime() throws SQLException {
 		Connection connection;
 
-		String connectionString = databaseConnectionString + "&user=" + username;
-		connection = DriverManager.getConnection(connectionString);
-
+		connection = DriverManager.getConnection(databaseConnectionString);
 		if (connection != null) {
 			try {
 				String result = connection.prepareStatement("SELECT now() as now").executeQuery().getString("now");
