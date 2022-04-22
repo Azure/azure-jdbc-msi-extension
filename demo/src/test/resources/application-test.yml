@@ -1,12 +1,12 @@
 mysql:
     connection:
-        url: jdbc:mysql://mysql-fmiguel-jdbc-msi-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&clientid=pakopakitopokopakete
-        username: sqladmin@mysql-fmiguel-jdbc-msi-dev
+        url: jdbc:mysql://mysql-fmiguel-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin
+        username: fmiguel@microsoft.com@mysql-fmiguel-jdbc-dev
 
 postgresql:
     connection:
         url: jdbc:postgresql://psql-fmiguel-jdbc-dev.postgres.database.azure.com:5432/Db?sslmode=require&authenticationPluginClassName=com.azure.jdbc.msi.extension.postgresql.AzurePostgresqlMSIAuthenticationPlugin&user=fmiguel@microsoft.com@psql-fmiguel-jdbc-dev&clientid=pepe
-        # username: sqladmin@postgresql-msi-jdbc-dev
+        # username: sqladmin@postgresql-jdbc-dev
 database:
     connection:
-        url: jdbc:mysql://mysql-fmiguel-jdbc-msi-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin
+        url: jdbc:mysql://mysql-fmiguel-jdbc-dev.mysql.database.azure.com:3306/Db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin

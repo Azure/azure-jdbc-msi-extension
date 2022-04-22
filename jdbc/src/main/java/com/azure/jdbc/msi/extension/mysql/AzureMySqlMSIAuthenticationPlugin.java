@@ -1,36 +1,28 @@
 package com.azure.jdbc.msi.extension.mysql;
 
-import com.azure.core.credential.AccessToken;
-import com.azure.core.credential.TokenCredential;
-import com.azure.core.credential.TokenRequestContext;
-import com.azure.identity.AzureCliCredentialBuilder;
-import com.azure.identity.ChainedTokenCredentialBuilder;
-import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.identity.ManagedIdentityCredential;
-import com.azure.identity.ManagedIdentityCredentialBuilder;
-import com.mysql.cj.callback.MysqlCallbackHandler;
-import com.mysql.cj.callback.UsernameCallback;
-import com.mysql.cj.conf.PropertyKey;
-import com.mysql.cj.protocol.AuthenticationPlugin;
-import com.mysql.cj.protocol.Protocol;
-import com.mysql.cj.protocol.Security;
-import com.mysql.cj.protocol.a.NativeConstants;
-import com.mysql.cj.protocol.a.NativePacketPayload;
-import com.mysql.cj.protocol.a.NativeConstants.StringSelfDataType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.azure.core.credential.AccessToken;
+import com.azure.core.credential.TokenCredential;
+import com.azure.core.credential.TokenRequestContext;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.mysql.cj.callback.MysqlCallbackHandler;
+import com.mysql.cj.callback.UsernameCallback;
+import com.mysql.cj.protocol.AuthenticationPlugin;
+import com.mysql.cj.protocol.Protocol;
+import com.mysql.cj.protocol.a.NativeConstants;
+import com.mysql.cj.protocol.a.NativePacketPayload;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Authentication plugin that enables Azure AD managed identity support.
  */
 public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<NativePacketPayload> {
-    // public static String PLUGIN_NAME = "mysql_clear_password";
+    // public static String PLUGIN_NAME = "aad_auth";
     public static String PLUGIN_NAME = "azure_mysql_msi";
 
     Logger logger = LoggerFactory.getLogger(AzureMySqlMSIAuthenticationPlugin.class);
@@ -115,18 +107,20 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
             try {
 
                 String password = accessToken.getToken();
-                response = new NativePacketPayload(
-                        Security.scramble411(password, fromServer.readBytes(StringSelfDataType.STRING_TERM),
-                                this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
                 // response = new NativePacketPayload(
-                // accessToken.getToken().getBytes(
-                // protocol.getServerSession()
-                // .getCharsetSettings()
-                // .getPasswordCharacterEncoding()));
-                // response.setPosition(response.getPayloadLength());
-                // response.writeInteger(NativeConstants.IntegerDataType.INT1, 0);
-                // response.setPosition(0);
+                // Security.scramble411(password,
+                // fromServer.readBytes(StringSelfDataType.STRING_TERM),
+                // this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
+                response = new NativePacketPayload(
+                        password.getBytes(
+                                protocol.getServerSession()
+                                        .getCharsetSettings()
+                                        .getPasswordCharacterEncoding()));
+                response.setPosition(response.getPayloadLength());
+                response.writeInteger(NativeConstants.IntegerDataType.INT1, 0);
+                response.setPosition(0);
             } catch (Exception uee) {
+                logger.error(uee.getMessage(), uee);
                 response = new NativePacketPayload(new byte[0]);
             }
         } else {
@@ -155,7 +149,7 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
          * fails let the AzureCliCredential have a chance), otherwise assume
          * system assigned managed identity.
          */
-        String clientId = this.protocol.getPropertySet().getStringProperty("clientid").getStringValue();
+        String clientId = getClientId();
 
         TokenCredential credential;
         if (clientId != null && !clientId.isEmpty()) {
@@ -194,11 +188,24 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
             scopes.add("https://ossrdbms-aad.database.windows.net");
             request.setScopes(scopes);
             accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
+            password = accessToken.getToken();
         }
     }
 
     @Override
     public void setSourceOfAuthData(String sourceOfAuthData) {
         this.sourceOfAuthData = sourceOfAuthData;
+    }
+
+    private String getClientId() {
+        String clientId;
+        if (this.protocol.getPropertySet().getProperty("clientid") != null) {
+            logger.info("clientid=" + this.protocol.getPropertySet().getProperty("clientid"));
+            clientId = this.protocol.getPropertySet().getStringProperty("clientid").getStringValue();
+        } else {
+            clientId = null;
+        }
+        return clientId;
+
     }
 }
