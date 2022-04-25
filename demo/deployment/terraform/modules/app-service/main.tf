@@ -84,12 +84,13 @@ resource "azurerm_linux_web_app" "application" {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
 
     # These are app specific environment variables
-    "DATABASE_CONNECTION_URL" = local.database_connection_url
+    "DATABASE_CONNECTION_URL"    = local.database_connection_url
+    "DATABASE_CONNECTION_CLIENTID" = var.identity_type == "UserAssigned" ? azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id : ""
   }
 }
 
 # important: mysql aad authentication expect the application_id, not the object id. that is the reason to look for the application_id in aad
 data "azuread_service_principal" "aad_appid" {
-  count = var.identity_type == "SystemAssigned" ? 1 : 0
+  count     = var.identity_type == "SystemAssigned" ? 1 : 0
   object_id = azurerm_linux_web_app.application.identity[0].principal_id
 }
