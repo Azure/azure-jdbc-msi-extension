@@ -43,7 +43,7 @@ function print_usage() {
     echo "<location>            -> your Azure preferred location"
     echo "<name>                -> your Application name. All Azure resources will be created based on this name"
     echo "<identity_type>       -> SystemAssigned | UserAssigned. Managed Identity type: system or user assigned. Azure Spring Cloud only supports system assigned identity"
-    echo "<aad admin username>  -> your Azure AD postgresql admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
+    echo "<aad admin username>  -> your Azure AD admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
 }
 
 echo "args count: $#"
