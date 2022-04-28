@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
  * The Authentication plugin that enables Azure AD managed identity support.
  */
 public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<NativePacketPayload> {
-    // public static String PLUGIN_NAME = "aad_auth";
-    public static String PLUGIN_NAME = "azure_mysql_msi";
+    public static String PLUGIN_NAME = "aad_auth";
+    // public static String PLUGIN_NAME = "azure_mysql_msi";
 
     Logger logger = LoggerFactory.getLogger(AzureMySqlMSIAuthenticationPlugin.class);
 
@@ -93,38 +93,40 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
         // return true;
         // }
 
-        logger.info("sourceOfData=" + sourceOfAuthData + " fromServer.isAuthMethodSwitchRequestPacket()="
-                + fromServer.isAuthMethodSwitchRequestPacket()
-                + ", fromServer.isAuthMoreDataPacket()=" + fromServer.isAuthMoreDataPacket()
-                + ", fromServer.isAuthNextFactorPacket()=" + fromServer.isAuthNextFactorPacket()
-                + ", fromServer.isEOFPacket()=" + fromServer.isEOFPacket() + ", fromServer.isErrorPacket()="
-                + fromServer.isErrorPacket() + ", fromServer.isOKPacket()=" + fromServer.isOKPacket()
-                + ", fromServer.isResultSetOKPacket()=" + fromServer.isResultSetOKPacket());
-
-        if (fromServer == null || accessToken == null || accessToken.isExpired()) {
+        if (fromServer == null) {
             response = new NativePacketPayload(new byte[0]);
-        } else if (protocol.getSocketConnection().isSSLEstablished()) {
-            try {
-
-                String password = accessToken.getToken();
-                // response = new NativePacketPayload(
-                // Security.scramble411(password,
-                // fromServer.readBytes(StringSelfDataType.STRING_TERM),
-                // this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
-                response = new NativePacketPayload(
-                        password.getBytes(
-                                protocol.getServerSession()
-                                        .getCharsetSettings()
-                                        .getPasswordCharacterEncoding()));
-                response.setPosition(response.getPayloadLength());
-                response.writeInteger(NativeConstants.IntegerDataType.INT1, 0);
-                response.setPosition(0);
-            } catch (Exception uee) {
-                logger.error(uee.getMessage(), uee);
+        } else {
+            logger.info("sourceOfData=" + sourceOfAuthData + " fromServer.isAuthMethodSwitchRequestPacket()="
+                    + fromServer.isAuthMethodSwitchRequestPacket()
+                    + ", fromServer.isAuthMoreDataPacket()=" + fromServer.isAuthMoreDataPacket()
+                    + ", fromServer.isAuthNextFactorPacket()=" + fromServer.isAuthNextFactorPacket()
+                    + ", fromServer.isEOFPacket()=" + fromServer.isEOFPacket() + ", fromServer.isErrorPacket()="
+                    + fromServer.isErrorPacket() + ", fromServer.isOKPacket()=" + fromServer.isOKPacket()
+                    + ", fromServer.isResultSetOKPacket()=" + fromServer.isResultSetOKPacket());
+            if (protocol.getSocketConnection().isSSLEstablished()) {
+                try {
+                    String password = getAccessToken().getToken();
+                    // response = new NativePacketPayload(
+                    // Security.scramble411(password,
+                    // fromServer.readBytes(StringSelfDataType.STRING_TERM),
+                    // this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
+                    byte[] content = password.getBytes(
+                        protocol.getServerSession()
+                                .getCharsetSettings()
+                                .getPasswordCharacterEncoding());
+                    logger.info("Content size: " + content.length);
+                    response = new NativePacketPayload(content);
+                    logger.info("payload size: " + response.getPayloadLength());
+                    response.setPosition(response.getPayloadLength());
+                    response.writeInteger(NativeConstants.IntegerDataType.INT1, 0);
+                    response.setPosition(0);
+                } catch (Exception uee) {
+                    logger.error(uee.getMessage(), uee);
+                    response = new NativePacketPayload(new byte[0]);
+                }
+            } else {
                 response = new NativePacketPayload(new byte[0]);
             }
-        } else {
-            response = new NativePacketPayload(new byte[0]);
         }
 
         toServer.add(response);
@@ -149,14 +151,6 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
          * fails let the AzureCliCredential have a chance), otherwise assume
          * system assigned managed identity.
          */
-        String clientId = getClientId();
-
-        TokenCredential credential;
-        if (clientId != null && !clientId.isEmpty()) {
-            credential = new DefaultAzureCredentialBuilder().managedIdentityClientId(clientId).build();
-        } else {
-            credential = new DefaultAzureCredentialBuilder().build();
-        }
 
         logger.info("sourceOfData= " + sourceOfAuthData + " username=" + username + " password=" + password);
 
@@ -176,20 +170,20 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
          */
         // String normalizedUserName = username.replace("@microsoft.onmicrosoft.com",
         // "");
-        String normalizedUserName = username;
-        callbackHandler.handle(new UsernameCallback(normalizedUserName));
+        // String normalizedUserName = username;
+        // callbackHandler.handle(new UsernameCallback(normalizedUserName));
 
         /*
          * Setup the access token.
          */
-        if (username != null) {
-            TokenRequestContext request = new TokenRequestContext();
-            ArrayList<String> scopes = new ArrayList<>();
-            scopes.add("https://ossrdbms-aad.database.windows.net");
-            request.setScopes(scopes);
-            accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
-            password = accessToken.getToken();
-        }
+        // if (username != null) {
+        //     TokenRequestContext request = new TokenRequestContext();
+        //     ArrayList<String> scopes = new ArrayList<>();
+        //     scopes.add("https://ossrdbms-aad.database.windows.net");
+        //     request.setScopes(scopes);
+        //     accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
+        //     password = accessToken.getToken();
+        // }
     }
 
     @Override
@@ -206,6 +200,31 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
             clientId = null;
         }
         return clientId;
+    }
 
+    private TokenCredential credential;
+
+    private TokenCredential geTokenCredential() {
+        if (credential == null) {
+            String clientId = getClientId();
+            if (clientId != null && !clientId.isEmpty()) {
+                credential = new DefaultAzureCredentialBuilder().managedIdentityClientId(clientId).build();
+            } else {
+                credential = new DefaultAzureCredentialBuilder().build();
+            }
+        }
+        return credential;
+    }
+
+    private AccessToken getAccessToken() {
+        if (accessToken == null || accessToken.isExpired()) {
+            TokenCredential credential = geTokenCredential();
+            TokenRequestContext request = new TokenRequestContext();
+            ArrayList<String> scopes = new ArrayList<>();
+            scopes.add("https://ossrdbms-aad.database.windows.net");
+            request.setScopes(scopes);
+            accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
+        }
+        return accessToken;
     }
 }
