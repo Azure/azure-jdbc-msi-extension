@@ -43,7 +43,7 @@ function print_usage() {
     echo "<location>            -> your Azure preferred location"
     echo "<name>                -> your Application name. All Azure resources will be created based on this name"
     echo "<identity_type>       -> SystemAssigned | UserAssigned. Managed Identity type: system or user assigned. Azure Spring Cloud only supports system assigned identity"
-    echo "<aad admin username>  -> your Azure AD postgresql admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com. Only for postgresql"
+    echo "<aad admin username>  -> your Azure AD postgresql admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
 }
 
 echo "args count: $#"
@@ -71,7 +71,7 @@ else
     resource_group=$(terraform output resource_group | tr -d '"')
     application_name=$(terraform output application_name | tr -d '"')
 
-    if [ "$application_hosting" == "appservice" ]; then
+    if [ "$application_hosting" == "spring" ]; then
         spring_cloud_service_name=$(terraform output spring_cloud_service_name | tr -d '"')
     fi
 
@@ -81,7 +81,7 @@ else
     echo "Build application"
     mvn clean package -DskipTests
     if [ "$application_hosting" == "appservice" ]; then
-        echo "Deploying applicatio to app service"
+        echo "Deploying application to app service"
         az webapp deploy --resource-group $resource_group \
             --name $application_name \
             --src-path ./demo/target/azure-jdbc-msi-demo-sample-0.0.1-SNAPSHOT.jar \
