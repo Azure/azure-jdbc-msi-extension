@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * The Authentication plugin that enables Azure AD managed identity support.
  */
 public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<NativePacketPayload> {
-    public static String PLUGIN_NAME = "aad_auth";
+    public static String PLUGIN_NAME = "mysql_clear_password";
+    // public static String PLUGIN_NAME = "aad_auth";
     // public static String PLUGIN_NAME = "azure_mysql_msi";
 
     Logger logger = LoggerFactory.getLogger(AzureMySqlMSIAuthenticationPlugin.class);
@@ -96,13 +97,13 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
         if (fromServer == null) {
             response = new NativePacketPayload(new byte[0]);
         } else {
-            logger.info("sourceOfData=" + sourceOfAuthData + " fromServer.isAuthMethodSwitchRequestPacket()="
-                    + fromServer.isAuthMethodSwitchRequestPacket()
-                    + ", fromServer.isAuthMoreDataPacket()=" + fromServer.isAuthMoreDataPacket()
-                    + ", fromServer.isAuthNextFactorPacket()=" + fromServer.isAuthNextFactorPacket()
-                    + ", fromServer.isEOFPacket()=" + fromServer.isEOFPacket() + ", fromServer.isErrorPacket()="
-                    + fromServer.isErrorPacket() + ", fromServer.isOKPacket()=" + fromServer.isOKPacket()
-                    + ", fromServer.isResultSetOKPacket()=" + fromServer.isResultSetOKPacket());
+            // logger.info("sourceOfData=" + sourceOfAuthData + " fromServer.isAuthMethodSwitchRequestPacket()="
+            //         + fromServer.isAuthMethodSwitchRequestPacket()
+            //         + ", fromServer.isAuthMoreDataPacket()=" + fromServer.isAuthMoreDataPacket()
+            //         + ", fromServer.isAuthNextFactorPacket()=" + fromServer.isAuthNextFactorPacket()
+            //         + ", fromServer.isEOFPacket()=" + fromServer.isEOFPacket() + ", fromServer.isErrorPacket()="
+            //         + fromServer.isErrorPacket() + ", fromServer.isOKPacket()=" + fromServer.isOKPacket()
+            //         + ", fromServer.isResultSetOKPacket()=" + fromServer.isResultSetOKPacket());
             if (protocol.getSocketConnection().isSSLEstablished()) {
                 try {
                     String password = getAccessToken().getToken();
@@ -111,9 +112,9 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
                     // fromServer.readBytes(StringSelfDataType.STRING_TERM),
                     // this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
                     byte[] content = password.getBytes(
-                        protocol.getServerSession()
-                                .getCharsetSettings()
-                                .getPasswordCharacterEncoding());
+                            protocol.getServerSession()
+                                    .getCharsetSettings()
+                                    .getPasswordCharacterEncoding());
                     logger.info("Content size: " + content.length);
                     response = new NativePacketPayload(content);
                     logger.info("payload size: " + response.getPayloadLength());
@@ -177,12 +178,12 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
          * Setup the access token.
          */
         // if (username != null) {
-        //     TokenRequestContext request = new TokenRequestContext();
-        //     ArrayList<String> scopes = new ArrayList<>();
-        //     scopes.add("https://ossrdbms-aad.database.windows.net");
-        //     request.setScopes(scopes);
-        //     accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
-        //     password = accessToken.getToken();
+        // TokenRequestContext request = new TokenRequestContext();
+        // ArrayList<String> scopes = new ArrayList<>();
+        // scopes.add("https://ossrdbms-aad.database.windows.net");
+        // request.setScopes(scopes);
+        // accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
+        // password = accessToken.getToken();
         // }
     }
 

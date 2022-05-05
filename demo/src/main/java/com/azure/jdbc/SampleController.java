@@ -37,7 +37,6 @@ public class SampleController {
             } else {
                 connection = DriverManager.getConnection(databaseConnectionString, databaseUserName, getAccessToken());
             }
-            connection = DriverManager.getConnection(databaseConnectionString);
 
             if (connection != null) {
                 ResultSet queryResult = connection.prepareStatement("SELECT now() as now").executeQuery();
