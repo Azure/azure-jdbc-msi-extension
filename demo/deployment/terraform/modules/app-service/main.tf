@@ -84,7 +84,8 @@ resource "azurerm_linux_web_app" "application" {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
 
     # These are app specific environment variables
-    "DATABASE_CONNECTION_URL"    = local.database_connection_url
+    "DATABASE_CONNECTION_URL"      = local.database_connection_url
+    "SPRING_DATASOURCE_URL"        = local.database_connection_url
     "DATABASE_CONNECTION_CLIENTID" = var.identity_type == "UserAssigned" ? azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id : ""
   }
 }

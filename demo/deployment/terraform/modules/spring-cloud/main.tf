@@ -47,5 +47,6 @@ resource "azurerm_spring_cloud_java_deployment" "application_deployment" {
 
   environment_variables = {
     "DATABASE_CONNECTION_URL" = var.database_url
+    "SPRING_DATASOURCE_URL"   = var.database_url
   }
 }
