@@ -41,6 +41,12 @@ variable "aad_administrator_name" {
   default     = ""
 }
 
+variable "aad_domain" {
+  type        = string
+  description = "The Azure Active Directory domain"
+  default     = ""
+}
+
 variable "identity_type" {
   type        = string
   description = "value of either 'SystemAssigned' or 'UserAssigned' to set the identity of the resource"

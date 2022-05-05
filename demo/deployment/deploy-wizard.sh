@@ -20,7 +20,7 @@ function createDatabaseUser() {
         cat tmp_users_processed.sql
 
         export PGPASSWORD=$(az account get-access-token --resource-type oss-rdbms --output tsv --query accessToken)
-        
+
         psql "host=$database_fqdn port=5432 dbname=$dbname user=$admin_username dbname=postgres sslmode=require" <tmp_users_processed.sql
     elif [ "$database_type" == "mysql" ]; then
         rm -f tmp_users_processed.sql
@@ -37,16 +37,16 @@ function createDatabaseUser() {
 }
 
 function print_usage() {
-    echo "Usage: $1 <database> <application_hosting> <location> <name> <identity_type> <aad_administrator_name>"
-    echo "<database>            -> mysql | postgresql"
-    echo "<application_hosting> -> appservice | spring"
-    echo "<location>            -> your Azure preferred location"
-    echo "<name>                -> your Application name. All Azure resources will be created based on this name"
-    echo "<identity_type>       -> SystemAssigned | UserAssigned. Managed Identity type: system or user assigned. Azure Spring Cloud only supports system assigned identity"
-    echo "<aad admin username>  -> your Azure AD admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
+    echo "Usage: $1 <database> <application_hosting> <location> <name> <identity_type> <aad_administrator_name> <aad_domain>"
+    echo "<database>                -> mysql | postgresql"
+    echo "<application_hosting>     -> appservice | spring"
+    echo "<location>                -> your Azure preferred location"
+    echo "<name>                    -> your Application name. All Azure resources will be created based on this name"
+    echo "<identity_type>           -> SystemAssigned | UserAssigned. Managed Identity type: system or user assigned. Azure Spring Cloud only supports system assigned identity"
+    echo "<aad_administrator_name>  -> your Azure AD admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
+    echo "<aad_domain>              -> your Azure AD domain. tenant.onmicrosoft.com / yourdomain.com"
 }
 
-echo "args count: $#"
 if (($# < 6)); then
     print_usage $0
 else
@@ -56,6 +56,13 @@ else
     name=$4
     identity_type=$5
     aad_administrator_name=$6
+    if [ "$database" == "mysql" ] && [ $# -lt 7 ]; then
+        echo "MySQL requires the domain name as well"
+        print_usage $0
+        exit 1
+    else
+        aad_domain=$7
+    fi
 
     cd terraform
     echo "Deploying infrastructure"
@@ -66,7 +73,9 @@ else
         -var database_type=$database \
         -var hosting_type=$application_hosting \
         -var identity_type=$identity_type \
-        -var aad_administrator_name=$aad_administrator_name -auto-approve
+        -var aad_administrator_name=$aad_administrator_name \
+        -var aad_domain=$aad_domain \
+        -auto-approve
 
     resource_group=$(terraform output resource_group | tr -d '"')
     application_name=$(terraform output application_name | tr -d '"')
@@ -87,7 +96,7 @@ else
             --src-path ./demo/target/azure-jdbc-msi-demo-sample-0.0.1-SNAPSHOT.jar \
             --type jar
     elif [ "$application_hosting" == "spring" ]; then
-        echo "Deploying applicatio to Azure Spring Cloud"
+        echo "Deploying application to Azure Spring Cloud"
         az spring-cloud app deploy --service $spring_cloud_service_name \
             --resource-group $resource_group \
             --name $application_name \

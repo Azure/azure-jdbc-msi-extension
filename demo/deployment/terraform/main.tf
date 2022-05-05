@@ -85,7 +85,8 @@ locals {
   # database_host               = var.database_type == "mysql" ? module.database_mysql[0].database_host : module.database_postgresql[0].database_host
   database_name               = var.database_type == "mysql" ? module.database_mysql[0].database_name : module.database_postgresql[0].database_name
   database_host_name          = var.database_type == "mysql" ? module.database_mysql[0].database_host_name : module.database_postgresql[0].database_host_name
-  application_login           = "${var.application_name}@${local.database_host_name}"
+  application_username        = var.database_type == "mysql" ? "${var.application_name}@${var.aad_domain}" : var.application_name
+  application_login           = "${local.application_username}@${local.database_host_name}"
   jdbc_database_url           = var.database_type == "mysql" ? module.database_mysql[0].jdbc_database_url : module.database_postgresql[0].jdbc_database_url
   jdbc_database_url_with_user = "${local.jdbc_database_url}&user=${local.application_login}"
 

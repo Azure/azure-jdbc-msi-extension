@@ -18,7 +18,7 @@ output "spring_cloud_service_name" {
   description = "Azure Spring Cloud service name"
 }
 output "application_username" {
-  value       = var.application_name
+  value       = local.application_username
   description = "The application user name."
 }
 output "application_identity" {
