@@ -7,6 +7,8 @@ function createDatabaseUser() {
     username=$(terraform output application_username | tr -d '"')
     application_id=$(terraform output application_identity | tr -d '"')
     dbname=$(terraform output database_name | tr -d '"')
+    jdbc_url=$(terraform output jdbc_url | tr -d '"')
+    database_host_name=$(terraform output database_host_name | tr -d '"')
 
     user_id=%%user_id%%
     login_name=%%login_name%%
@@ -34,6 +36,11 @@ function createDatabaseUser() {
 
     # cleanup
     rm -f tmp_users_processed.sql
+
+    # connection string
+    echo "Managed identity connection string: $jdbc_url&user=$username@$database_host_name"
+    echo "AAD admin connection string:        $jdbc_url&user=$admin_username"
+
 }
 
 function print_usage() {
@@ -45,6 +52,13 @@ function print_usage() {
     echo "<identity_type>           -> SystemAssigned | UserAssigned. Managed Identity type: system or user assigned. Azure Spring Cloud only supports system assigned identity"
     echo "<aad_administrator_name>  -> your Azure AD admin username. youruser@tenant.onmicrosoft.com / youruser@yourdomain.com."
     echo "<aad_domain>              -> your Azure AD domain. tenant.onmicrosoft.com / yourdomain.com"
+}
+
+function print_local_test(){
+    echo "To test the application locally, please configure the local profile."
+    echo "You can use the Azure AD administrator account."
+    echo "The deployment script configured the Azure CLI account as Azure AD administrator."
+    echo "Configure database.connection.url and spring.datasource.url"
 }
 
 if (($# < 6)); then
@@ -105,5 +119,7 @@ else
             --artifact-path ./demo/target/azure-jdbc-msi-demo-sample-0.0.1-SNAPSHOT.jar
     else
         echo "Unknown application hosting: $application_hosting"
+        exit 1
     fi
+    print_local_test
 fi

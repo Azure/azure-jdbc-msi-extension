@@ -1,4 +1,4 @@
-package com.azure.jdbc;
+package com.azure.jdbc.web;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,3 +1,6 @@
 spring:
   application:
     name: app-msi-jdbc
+  jpa:
+    hibernate:
+      ddl-auto: update

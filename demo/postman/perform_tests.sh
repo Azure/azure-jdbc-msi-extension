@@ -1,0 +1,1 @@
+newman run check_lists_request.postman_collection.json -e local.checklist.postman_environment.json

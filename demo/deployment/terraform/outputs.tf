@@ -30,6 +30,11 @@ output "database_fqdn" {
   description = "Database FQDN"
 }
 
+output "database_host_name" {
+  value = local.database_host_name
+  description = "Database host name"  
+}
+
 output "admin_username" {
   value       = local.admin_username
   description = "Database admin user name."
@@ -38,5 +43,10 @@ output "admin_username" {
 output "database_name" {
   value       = local.database_name
   description = "The database name."
+}
+
+output "jdbc_url" {
+  value       = local.jdbc_database_url
+  description = "The JDBC database URL."
 }
 

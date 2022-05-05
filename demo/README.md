@@ -7,6 +7,7 @@ This project demonstrates how to connect to a database using the Azure JDBC MSI.
 * Postgresql client: psql
 * Mysql client: mysql. 
 * Assuming a Linux environment. All tests performed on Ubuntu 20.4 on WSL2.
+* NPM to perform postman tests locally in the command line.
 * Azure subscription
 
 ## Setup
@@ -57,6 +58,8 @@ The terraform deployment has the following parameter as an output _application_u
 When opening the url the result should show the database server time.
 
 For testing purposes the application also provides the access token used to connect to the database. To retrieve it open https://[url]/token
+
+There is an endpoint that uses Spring data source, http://[url]/checklist. There is a postman collection to test that endpoint. It can be found in folder [postman](./postman).
 
 
 
