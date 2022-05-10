@@ -4,13 +4,10 @@ import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenRequestContext;
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
 
 @RestController
 public class SampleController {
