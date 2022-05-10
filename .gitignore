@@ -100,3 +100,5 @@ scalastyle-output.xml
 # Flatten-pom
 .flattened-pom.xml
 flatter.pom
+
+demo/deployment/terraform/tmp_users_processed.sql
