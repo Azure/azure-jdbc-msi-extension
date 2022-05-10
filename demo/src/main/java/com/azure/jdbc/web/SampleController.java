@@ -24,13 +24,8 @@ public class SampleController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println(jdbcTemplate);
-    }
-
     @GetMapping("/")
-    public String getServerDate2() {
+    public String getServerDate() {
         return "server date is : " + jdbcTemplate.queryForObject("SELECT now() as now", String.class);
     }
 
