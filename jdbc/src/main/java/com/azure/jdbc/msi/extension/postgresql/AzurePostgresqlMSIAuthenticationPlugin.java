@@ -51,19 +51,6 @@ public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlu
         this.properties = properties;
     }
 
-    private DefaultAzureCredential getAzureCredential() {
-        if (azureCredential == null) {
-            DefaultAzureCredentialBuilder builder = new DefaultAzureCredentialBuilder();
-            if (properties != null && properties.containsKey("clientid")) {
-                String clientId = properties.getProperty("clientid");
-                logger.info("using clientid: " + clientId);                
-                builder.managedIdentityClientId(clientId);
-            }
-            azureCredential = builder.build();
-        }
-        return azureCredential;
-    }
-
     /**
      * Get the password.
      * 
@@ -86,9 +73,37 @@ public class AzurePostgresqlMSIAuthenticationPlugin implements AuthenticationPlu
         return password;
     }
 
+    private String getClientId() {
+        String clientId = null;
+        if (properties != null && properties.containsKey("clientid")) {
+            clientId = properties.getProperty("clientid");
+        }
+        return clientId;
+    }
+
+    private TokenCredential credential;
+
+    private TokenCredential getTokenCredential() {
+        if (credential == null) {
+            String clientId = getClientId();
+            if (clientId != null && !clientId.isEmpty()) {
+                credential = new DefaultAzureCredentialBuilder().managedIdentityClientId(clientId).build();
+            } else {
+                credential = new DefaultAzureCredentialBuilder().build();
+            }
+        }
+        return credential;
+    }
+
     private AccessToken getAccessToken() {
-        TokenRequestContext tokenRequest = new TokenRequestContext()
-                .addScopes("https://ossrdbms-aad.database.windows.net");
-        return getAzureCredential().getToken(tokenRequest).block();
+        if (accessToken == null || accessToken.isExpired()) {
+            TokenCredential credential = getTokenCredential();
+            TokenRequestContext request = new TokenRequestContext();
+            ArrayList<String> scopes = new ArrayList<>();
+            scopes.add("https://ossrdbms-aad.database.windows.net");
+            request.setScopes(scopes);
+            accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
+        }
+        return accessToken;
     }
 }
