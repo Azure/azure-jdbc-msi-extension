@@ -82,42 +82,17 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
         toServer.clear();
         NativePacketPayload response;
 
-        // if (!(this.sourceOfAuthData.equals(PLUGIN_NAME) ||
-        // this.sourceOfAuthData.equals("mysql_clear_password")) ||
-        // fromServer.getPayloadLength() == 0) {
-        // // Cannot do anything with whatever payload comes from the server, so just
-        // skip this iteration and wait for a Protocol::AuthSwitchRequest or a
-        // // Protocol::AuthNextFactor.
-        // this.logger.info("Skipping authentication step, waiting for AuthSwitchRequest
-        // or AuthNextFactor. sourceOfAuthData: " + this.sourceOfAuthData);
-        // toServer.add(new NativePacketPayload(0));
-        // return true;
-        // }
-
         if (fromServer == null) {
             response = new NativePacketPayload(new byte[0]);
         } else {
-            // logger.info("sourceOfData=" + sourceOfAuthData + " fromServer.isAuthMethodSwitchRequestPacket()="
-            //         + fromServer.isAuthMethodSwitchRequestPacket()
-            //         + ", fromServer.isAuthMoreDataPacket()=" + fromServer.isAuthMoreDataPacket()
-            //         + ", fromServer.isAuthNextFactorPacket()=" + fromServer.isAuthNextFactorPacket()
-            //         + ", fromServer.isEOFPacket()=" + fromServer.isEOFPacket() + ", fromServer.isErrorPacket()="
-            //         + fromServer.isErrorPacket() + ", fromServer.isOKPacket()=" + fromServer.isOKPacket()
-            //         + ", fromServer.isResultSetOKPacket()=" + fromServer.isResultSetOKPacket());
             if (protocol.getSocketConnection().isSSLEstablished()) {
                 try {
                     String password = getAccessToken().getToken();
-                    // response = new NativePacketPayload(
-                    // Security.scramble411(password,
-                    // fromServer.readBytes(StringSelfDataType.STRING_TERM),
-                    // this.protocol.getServerSession().getCharsetSettings().getPasswordCharacterEncoding()));
                     byte[] content = password.getBytes(
                             protocol.getServerSession()
                                     .getCharsetSettings()
                                     .getPasswordCharacterEncoding());
-                    logger.info("Content size: " + content.length);
                     response = new NativePacketPayload(content);
-                    logger.info("payload size: " + response.getPayloadLength());
                     response.setPosition(response.getPayloadLength());
                     response.writeInteger(NativeConstants.IntegerDataType.INT1, 0);
                     response.setPosition(0);
@@ -145,47 +120,7 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
     }
 
     @Override
-    public void setAuthenticationParameters(String username, String password) {
-
-        /*
-         * If username is specified use it as a managed identity (and if it
-         * fails let the AzureCliCredential have a chance), otherwise assume
-         * system assigned managed identity.
-         */
-
-        logger.info("sourceOfData= " + sourceOfAuthData + " username=" + username + " password=" + password);
-
-        if (username != null) {
-            // ArrayList<TokenCredential> credentials = new ArrayList<>();
-            // credentials.add(new ManagedIdentityCredentialBuilder()
-            // .clientId(username).build());
-            // credentials.add(new AzureCliCredentialBuilder().build());
-            // credential = new ChainedTokenCredentialBuilder().addAll(credentials).build();
-        } else {
-            // credential = new ManagedIdentityCredentialBuilder().build();
-            // username = ((ManagedIdentityCredential) credential).getClientId();
-        }
-
-        /**
-         * Setup the username callback.
-         */
-        // String normalizedUserName = username.replace("@microsoft.onmicrosoft.com",
-        // "");
-        // String normalizedUserName = username;
-        // callbackHandler.handle(new UsernameCallback(normalizedUserName));
-
-        /*
-         * Setup the access token.
-         */
-        // if (username != null) {
-        // TokenRequestContext request = new TokenRequestContext();
-        // ArrayList<String> scopes = new ArrayList<>();
-        // scopes.add("https://ossrdbms-aad.database.windows.net");
-        // request.setScopes(scopes);
-        // accessToken = credential.getToken(request).block(Duration.ofSeconds(30));
-        // password = accessToken.getToken();
-        // }
-    }
+    public void setAuthenticationParameters(String username, String password) {    }
 
     @Override
     public void setSourceOfAuthData(String sourceOfAuthData) {
@@ -205,7 +140,7 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
 
     private TokenCredential credential;
 
-    private TokenCredential geTokenCredential() {
+    private TokenCredential getTokenCredential() {
         if (credential == null) {
             String clientId = getClientId();
             if (clientId != null && !clientId.isEmpty()) {
@@ -219,7 +154,7 @@ public class AzureMySqlMSIAuthenticationPlugin implements AuthenticationPlugin<N
 
     private AccessToken getAccessToken() {
         if (accessToken == null || accessToken.isExpired()) {
-            TokenCredential credential = geTokenCredential();
+            TokenCredential credential = getTokenCredential();
             TokenRequestContext request = new TokenRequestContext();
             ArrayList<String> scopes = new ArrayList<>();
             scopes.add("https://ossrdbms-aad.database.windows.net");
