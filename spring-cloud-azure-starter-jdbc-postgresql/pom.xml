@@ -20,6 +20,11 @@
         <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>com.azure.jdbc</groupId>
+        <artifactId>azure-jdbc-msi-extension</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
       </dependency>
