@@ -44,6 +44,7 @@ resource "azurerm_user_assigned_identity" "app_user_assigned_identity" {
 
 locals {
   database_connection_url = var.identity_type == "UserAssigned" ? "${var.database_url}&clientid=${azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id}" : var.database_url
+  spring_datasource_url = var.identity_type == "UserAssigned" ? "${var.spring_datasource_url}?clientid=${azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id}" : var.spring_datasource_url
 }
 
 resource "azurecaf_name" "app_service" {
@@ -85,8 +86,9 @@ resource "azurerm_linux_web_app" "application" {
 
     # These are app specific environment variables
     "DATABASE_CONNECTION_URL"      = local.database_connection_url
-    "SPRING_DATASOURCE_URL"        = local.database_connection_url
     "DATABASE_CONNECTION_CLIENTID" = var.identity_type == "UserAssigned" ? azurerm_user_assigned_identity.app_user_assigned_identity.0.client_id : ""
+    "SPRING_DATASOURCE_URL"        = local.spring_datasource_url
+    "SPRING_DATASOURCE_USERNAME"   = var.spring_datasource_username
   }
 }
 

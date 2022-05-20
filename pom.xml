@@ -12,6 +12,9 @@
   <modules>
     <module>jdbc</module>
     <module>demo</module>
+    <module>spring-cloud-azure-autoconfigure-fork</module>
+    <module>spring-cloud-azure-starter-jdbc-postgresql</module>
+    <module>spring-cloud-azure-starter-jdbc-mysql</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

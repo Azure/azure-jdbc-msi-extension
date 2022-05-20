@@ -23,3 +23,13 @@ variable "database_url" {
   type        = string
   description = "The URL to the database"
 }
+
+variable "spring_datasource_url" {
+  type        = string
+  description = "The Spring Datasource URL to the database"
+}
+
+variable "spring_datasource_username" {
+  type        = string
+  description = "The Spring Datasource username to the database"
+}

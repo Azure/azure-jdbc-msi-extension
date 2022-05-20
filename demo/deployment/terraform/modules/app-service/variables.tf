@@ -24,6 +24,16 @@ variable "database_url" {
   description = "The URL to the database"
 }
 
+variable "spring_datasource_url" {
+  type        = string
+  description = "The Spring Datasource URL to the database"
+}
+
+variable "spring_datasource_username" {
+  type        = string
+  description = "The Spring Datasource username to the database"
+}
+
 variable "identity_type" {
   type        = string
   description = "value of either 'SystemAssigned' or 'UserAssigned' to set the identity of the resource"
