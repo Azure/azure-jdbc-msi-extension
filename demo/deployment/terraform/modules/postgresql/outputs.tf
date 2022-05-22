@@ -32,3 +32,7 @@ output "database_name" {
 output "jdbc_database_url" {
   value = "jdbc:postgresql://${azurerm_postgresql_server.database.fqdn}:5432/${azurerm_postgresql_database.database.name}?sslmode=require&authenticationPluginClassName=com.azure.jdbc.msi.extension.postgresql.AzurePostgresqlMSIAuthenticationPlugin"
 }
+
+output "spring_datasource_url" {
+  value = "jdbc:postgresql://${azurerm_postgresql_server.database.fqdn}:5432/${azurerm_postgresql_database.database.name}"
+}

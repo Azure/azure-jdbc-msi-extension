@@ -46,6 +46,8 @@ module "application_spring" {
   environment      = local.environment
   location         = var.location
   database_url     = local.jdbc_database_url_with_user
+  spring_datasource_url = local.spring_datasource_url
+  spring_datasource_username = local.spring_datasource_username
 }
 
 module "application_appservice" {
@@ -57,6 +59,8 @@ module "application_appservice" {
   location         = var.location
   identity_type    = var.identity_type
   database_url     = local.jdbc_database_url_with_user
+  spring_datasource_url = local.spring_datasource_url
+  spring_datasource_username = local.spring_datasource_username
 }
 module "database_mysql" {
   count                  = var.database_type == "mysql" ? 1 : 0
@@ -89,6 +93,8 @@ locals {
   application_login           = "${local.application_username}@${local.database_host_name}"
   jdbc_database_url           = var.database_type == "mysql" ? module.database_mysql[0].jdbc_database_url : module.database_postgresql[0].jdbc_database_url
   jdbc_database_url_with_user = "${local.jdbc_database_url}&user=${local.application_login}"
+  spring_datasource_url       = var.database_type == "mysql" ? module.database_mysql[0].spring_datasource_url : module.database_postgresql[0].spring_datasource_url
+  spring_datasource_username  = local.application_login
 
   application_name          = var.hosting_type == "appservice" ? module.application_appservice[0].application_name : module.application_spring[0].application_name
   application_identity      = var.hosting_type == "appservice" ? module.application_appservice[0].application_identity : module.application_spring[0].application_identity
