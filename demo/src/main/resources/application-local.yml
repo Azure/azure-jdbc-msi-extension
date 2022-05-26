@@ -1,8 +1,8 @@
 database:
-    connection:
-        url: jdbc:mysql://mysql-fmiguel-jdbc-dev.mysql.database.azure.com:3306/db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&user=fmiguel@microsoft.com@mysql-fmiguel-jdbc-dev
+  connection:
+    url: jdbc:mysql://mysql-xiada-app-w-dev.mysql.database.azure.com:3306/db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&user=xiada@microsoft.com@mysql-xiada-app-w-dev
 
 spring:
-    datasource:
-        url: jdbc:mysql://mysql-fmiguel-jdbc-dev.mysql.database.azure.com:3306/db?sslMode=REQUIRED&useSSL=true&defaultAuthenticationPlugin=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin&authenticationPlugins=com.azure.jdbc.msi.extension.mysql.AzureMySqlMSIAuthenticationPlugin
-        username: fmiguel@microsoft.com@mysql-fmiguel-jdbc-dev
+  datasource:
+    url: jdbc:mysql://mysql-xiada-app-w-dev.mysql.database.azure.com:3306/db
+    username: xiada@microsoft.com@mysql-xiada-app-w-dev
