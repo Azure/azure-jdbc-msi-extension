@@ -2,6 +2,7 @@ This repo will be **ARCHIVED**. All Azure JDBC MSI extension will be implemented
 
 Please create an issue in [azure-sdk-for-java](https://github.com/Azure/azure-sdk-for-java) repo if you have any questions. 
 
+For more information about passowrdless connections, please refer to https://aka.ms/passwordless-connections.
 
 [![Java CI with Maven](https://github.com/Azure/azure-jdbc-msi-extension/actions/workflows/maven.yml/badge.svg)](https://github.com/Azure/azure-jdbc-msi-extension/actions/workflows/maven.yml)
 
